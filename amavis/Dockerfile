@@ -22,6 +22,7 @@ RUN su - amavis -s /bin/bash && razor-admin -create && razor-admin -register && 
 
 COPY ./config/conf.d /etc/amavis/conf.d
 COPY ./config/rsyslog.conf /etc/rsyslog.conf
+COPY ./config/whitelist /etc/amavis/whitelist
 
 # Nice place for your settings
 VOLUME ["/mail_settings"]
