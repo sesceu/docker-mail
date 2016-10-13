@@ -21,10 +21,10 @@ COPY ./config/opendkim.conf etc/opendkim.conf
 VOLUME ["/mail_settings"]
 
 # Configure boot script
-COPY boot /
+COPY boot.sh /
 # And the key generation script
 COPY keygen /
-RUN chmod 755 /boot /keygen
+RUN chmod 755 /boot.sh /keygen
 
 ENV OPEN_DKIM=true
 

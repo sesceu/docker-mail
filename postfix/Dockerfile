@@ -27,9 +27,9 @@ COPY ./config/dovecot /etc/dovecot/conf.d/
 COPY ./config/rsyslog.conf /etc/rsyslog.conf
 
 # Copy boot scripts
-COPY boot /
+COPY boot.sh /
 COPY boot.d /boot.d
-RUN chmod 755 /boot /boot.d/*
+RUN chmod 755 /boot.sh /boot.d/*
 
 # Nice place for your settings
 VOLUME ["/mail_settings"]
