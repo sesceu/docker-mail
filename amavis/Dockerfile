@@ -28,11 +28,11 @@ COPY ./config/whitelist /etc/amavis/whitelist
 VOLUME ["/mail_settings"]
 
 # Copy boot scripts
-COPY boot.sh /
-COPY boot.d /boot.d
+COPY ./boot.sh /
+COPY ./boot.d /boot.d
 RUN chmod 755 /boot.sh /boot.d/*
 
 ENV AMAVIS=true
 
 EXPOSE 10024
-CMD ./boot; amavisd-new; rsyslogd -n
+CMD ./boot.sh; amavisd-new; rsyslogd -n

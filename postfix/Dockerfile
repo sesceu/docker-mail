@@ -27,8 +27,8 @@ COPY ./config/dovecot /etc/dovecot/conf.d/
 COPY ./config/rsyslog.conf /etc/rsyslog.conf
 
 # Copy boot scripts
-COPY boot.sh /
-COPY boot.d /boot.d
+COPY ./boot.sh /
+COPY ./boot.d /boot.d
 RUN chmod 755 /boot.sh /boot.d/*
 
 # Nice place for your settings
@@ -51,4 +51,4 @@ RUN groupadd -g 5000 vmail
 RUN useradd -g vmail -u 5000 vmail -d /vmail -m
 
 EXPOSE 25 143 587 993
-CMD /boot; service postgrey start; service postfix start; service dovecot start; rsyslogd -n
+CMD /boot.sh; service postgrey start; service postfix start; service dovecot start; rsyslogd -n
