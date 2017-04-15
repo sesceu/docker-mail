@@ -35,7 +35,23 @@ pipeline {
         DOCKER_HUB = credentials('docker-hub-credentials')
       }
       steps {
-        sh "docker login --username \"$DOCKER_HUB_USR\" --password \"$DOCKER_HUB_PSW\""
+        parallel(
+          "amavis" : {
+            sh "docker login --username \"$DOCKER_HUB_USR\" --password \"$DOCKER_HUB_PSW\""
+            sh "docker push $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER}"
+            sh "docker push $DOCKER_NAME_AMAVIS:latest"
+          },
+          "opendkim" : {
+            sh "docker login --username \"$DOCKER_HUB_USR\" --password \"$DOCKER_HUB_PSW\""
+            sh "docker push $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER}"
+            sh "docker push $DOCKER_NAME_OPENDKIM:latest"
+          },
+          "postfix" : {
+            sh "docker login --username \"$DOCKER_HUB_USR\" --password \"$DOCKER_HUB_PSW\""
+            sh "docker push $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER}"
+            sh "docker push $DOCKER_NAME_POSTFIX:latest"
+          }
+        )
       }
     }
   }
