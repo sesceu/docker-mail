@@ -10,19 +10,22 @@ pipeline {
       steps {
         parallel(
           "amavis" : {
-            dir "amavis"
-            sh "docker build -t $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} --no-cache ."
-            sh "docker tag $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} $DOCKER_NAME_AMAVIS:latest"
+            dir("amavis") {
+              sh "docker build -t $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} --no-cache ."
+              sh "docker tag $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} $DOCKER_NAME_AMAVIS:latest"
+            }
           },
           "opendkim" : {
-            dir "opendkim"
-            sh "docker build -t $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER} --no-cache ."
-            sh "docker tag $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER} $DOCKER_NAME_OPENDKIM:latest"
+            dir("opendkim") {
+              sh "docker build -t $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER} --no-cache ."
+              sh "docker tag $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER} $DOCKER_NAME_OPENDKIM:latest"
+            }
           },
           "postfix" : {
-            dir "postfix"
-            sh "docker build -t $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} --no-cache ."
-            sh "docker tag $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} $DOCKER_NAME_POSTFIX:latest"
+            dir("postfix") {
+              sh "docker build -t $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} --no-cache ."
+              sh "docker tag $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} $DOCKER_NAME_POSTFIX:latest"
+            }
           }
         )
       }
