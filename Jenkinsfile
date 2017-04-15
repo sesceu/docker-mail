@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Docker Build') {
       steps {
-        parallel {
+        parallel(
           "amavis" : {
             dir "amavis"
             sh "docker build -t $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} --no-cache ."
@@ -24,7 +24,7 @@ pipeline {
             sh "docker build -t $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} --no-cache ."
             sh "docker tag $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} $DOCKER_NAME_POSTFIX:latest"
           }
-        }
+        )
       }
     }
     stage('Docker Push') {
