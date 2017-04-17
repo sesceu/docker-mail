@@ -28,6 +28,6 @@ VOLUME ["/etc/postgrey"]
 # Volume for postgrey's database
 VOLUME ["/var/lib/postgrey"]
 
-EXPOSE 25 143 587 993
-CMD /boot.sh; postgrey --inet=127.0.0.1:10023; rsyslogd -n
-HEALTHCHECK CMD nc -z localhost 10023 || exit 1
+EXPOSE 10023
+CMD /boot.sh; postgrey --inet=postgrey:10023; rsyslogd -n
+HEALTHCHECK CMD nc -z postgrey 10023 || exit 1
