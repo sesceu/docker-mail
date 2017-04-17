@@ -1,21 +1,25 @@
-FROM ubuntu:15.10
+FROM ubuntu:latest
+MAINTAINER Sebastian Schneider <mail@sesc.eu>
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN locale-gen en_GB en_GB.UTF-8 && dpkg-reconfigure locales
 
 # Prerequisites
-RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d && \
-    apt-get update && apt-get install -y \
-    rsyslog \
-    amavisd-new \
-    spamassassin \
-    libnet-dns-perl \
-    libmail-spf-perl \
-    pyzor \
-    razor \
-    jq && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN echo "will.be.overwritten.com" > /etc/mailname \
+    && apt-get update && apt-get install -y \
+       rsyslog \
+       amavisd-new \
+       spamassassin \
+       libnet-dns-perl \
+       libmail-spf-perl \
+       locales \
+       pyzor \
+       razor \
+       netcat \
+       jq \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN locale-gen en_US en_US.UTF-8 && dpkg-reconfigure locales
 
 # Set up razor and pyzor
 RUN su - amavis -s /bin/bash && razor-admin -create && razor-admin -register && pyzor discover
@@ -36,3 +40,4 @@ ENV AMAVIS=true
 
 EXPOSE 10024
 CMD ./boot.sh; amavisd-new; rsyslogd -n
+HEALTHCHECK CMD nc -z localhost 10024 || exit 1
