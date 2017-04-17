@@ -9,32 +9,32 @@ pipeline {
   stages {
     stage('Docker Build') {
       steps {
-        parallel(
-          "amavis" : {
+#        parallel(
+#          "amavis" : {
             dir("amavis") {
               sh "docker build -t $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} --no-cache ."
               sh "docker tag $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} $DOCKER_NAME_AMAVIS:latest"
-            }
+#            }
           },
-          "opendkim" : {
+#          "opendkim" : {
             dir("opendkim") {
               sh "docker build -t $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER} --no-cache ."
               sh "docker tag $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER} $DOCKER_NAME_OPENDKIM:latest"
-            }
+#            }
           },
-          "postgrey" : {
+#          "postgrey" : {
             dir("postgrey") {
               sh "docker build -t $DOCKER_NAME_POSTGREY:${env.BUILD_NUMBER} --no-cache ."
               sh "docker tag $DOCKER_NAME_POSTGREY:${env.BUILD_NUMBER} $DOCKER_NAME_POSTGREY:latest"
-            }
+#            }
           },
-          "postfix" : {
+#          "postfix" : {
             dir("postfix") {
               sh "docker build -t $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} --no-cache ."
               sh "docker tag $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} $DOCKER_NAME_POSTFIX:latest"
-            }
+#            }
           }
-        )
+#        )
       }
     }
     stage('Docker Push') {
