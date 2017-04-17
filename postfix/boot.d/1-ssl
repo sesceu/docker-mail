@@ -1,17 +1,22 @@
 #!/bin/bash
 echo "Running `basename "$0"`"
 
-# Check if we have SSL certificates in config, otherwise copy it there
-# First the key file
-if [ -f /mail_settings/ssl-cert-snakeoil.key ]; then
-	cp /mail_settings/ssl-cert-snakeoil.key /etc/ssl/private/ssl-cert-snakeoil.key
-else
-	cp /etc/ssl/private/ssl-cert-snakeoil.key /mail_settings/ssl-cert-snakeoil.key
-fi
-
-# Then the pem file
-if [ -f /mail_settings/ssl-cert-snakeoil.pem ]; then
+# Copy cert_file if present in config
+if jq -e '.settings.ssl_cert_file?' "$CONFIG_FILE" > /dev/null; then
+	CERT_FILE=$(jq -r '.settings.ssl_cert_file' "$CONFIG_FILE")
+	cp -L $CERT_FILE /etc/ssl/certs/ssl-cert-snakeoil.pem
+elif [ -f /mail_settings/ssl-cert-snakeoil.pem ]; then
 	cp /mail_settings/ssl-cert-snakeoil.pem /etc/ssl/certs/ssl-cert-snakeoil.pem
 else
 	cp /etc/ssl/certs/ssl-cert-snakeoil.pem /mail_settings/ssl-cert-snakeoil.pem
+fi
+
+# Copy key if present in config
+if jq -e '.settings.ssl_key_file?' "$CONFIG_FILE" > /dev/null; then
+	KEY_FILE=$(jq -r '.settings.ssl_key_file' "$CONFIG_FILE")
+	cp -L $KEY_FILE /etc/ssl/private/ssl-cert-snakeoil.key
+elif [ -f /mail_settings/ssl-cert-snakeoil.key ]; then
+	cp /mail_settings/ssl-cert-snakeoil.key /etc/ssl/private/ssl-cert-snakeoil.key
+else
+	cp /etc/ssl/private/ssl-cert-snakeoil.key /mail_settings/ssl-cert-snakeoil.key
 fi
