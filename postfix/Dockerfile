@@ -1,22 +1,23 @@
-FROM ubuntu:15.10
+FROM ubuntu:latest
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN locale-gen en_GB en_GB.UTF-8 && dpkg-reconfigure locales
 
 # Prerequisites
-RUN apt-get update && apt-get install -y \
-    rsyslog \
-    ssl-cert \
-    postfix \
-    dovecot-imapd \
-    dovecot-sieve \
-    dovecot-managesieved \
-    dovecot-ldap \	
-    postgrey \
-    jq && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      locales \
+      netcat \
+      rsyslog \
+      ssl-cert \
+      postfix \
+      dovecot-imapd \
+      dovecot-sieve \
+      dovecot-managesieved \
+      dovecot-ldap \
+      jq \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN locale-gen en_US en_US.UTF-8 && dpkg-reconfigure locales
 
 # Postfix configuration
 ADD ./config/postfix /etc/postfix/
@@ -40,15 +41,10 @@ VOLUME ["/vmail"]
 # Volume to store sieve-rules
 VOLUME ["/sieve"]
 
-# Volume for postgrey's whitelists
-VOLUME ["/etc/postgrey"]
-
-# Volume for postgrey's database
-VOLUME ["/var/lib/postgrey"]
-
 # Add user vmail that ownes mail and sieve
 RUN groupadd -g 5000 vmail
 RUN useradd -g vmail -u 5000 vmail -d /vmail -m
 
 EXPOSE 25 143 587 993
-CMD /boot.sh; service postgrey start; service postfix start; service dovecot start; rsyslogd -n
+CMD /boot.sh; service postfix start; service dovecot start; rsyslogd -n
+HEALTHCHECK CMD nc -z localhost 25 && nc -z localhost 143 && nc -z localhost 587 && nc -z localhost 993 && nc -z localhost 4190 || exit 1

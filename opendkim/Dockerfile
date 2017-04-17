@@ -3,8 +3,7 @@ FROM ubuntu:latest
 ENV DEBIAN_FRONTEND noninteractive
 
 # Prerequisites
-RUN apt-get update \
-    && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
        locales \
        netcat \
        opendkim \
@@ -33,4 +32,4 @@ ENV OPEN_DKIM=true
 
 EXPOSE 8891
 CMD /boot.sh; opendkim -p inet:8891@0.0.0.0; rsyslogd -n
-HEALTHCHECK CMD nc -z localhost 8891
+HEALTHCHECK CMD nc -z localhost 8891 || exit 1

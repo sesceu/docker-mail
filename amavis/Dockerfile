@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Prerequisites
 RUN echo "will.be.overwritten.com" > /etc/mailname \
-    && apt-get update && apt-get install -y \
+    && apt-get update && apt-get install -y --no-install-recommends \
        rsyslog \
        amavisd-new \
        spamassassin \
