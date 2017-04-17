@@ -9,22 +9,22 @@ pipeline {
   stages {
     stage('Docker Build') {
       steps {
-            dir("amavis") {
-              sh "docker build -t $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} --no-cache ."
-              sh "docker tag $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} $DOCKER_NAME_AMAVIS:latest"
-          },
-            dir("opendkim") {
-              sh "docker build -t $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER} --no-cache ."
-              sh "docker tag $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER} $DOCKER_NAME_OPENDKIM:latest"
-          },
-            dir("postgrey") {
-              sh "docker build -t $DOCKER_NAME_POSTGREY:${env.BUILD_NUMBER} --no-cache ."
-              sh "docker tag $DOCKER_NAME_POSTGREY:${env.BUILD_NUMBER} $DOCKER_NAME_POSTGREY:latest"
-          },
-            dir("postfix") {
-              sh "docker build -t $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} --no-cache ."
-              sh "docker tag $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} $DOCKER_NAME_POSTFIX:latest"
-          }
+        dir("amavis") {
+          sh "docker build -t $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} --no-cache ."
+          sh "docker tag $DOCKER_NAME_AMAVIS:${env.BUILD_NUMBER} $DOCKER_NAME_AMAVIS:latest"
+        }
+        dir("opendkim") {
+          sh "docker build -t $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER} --no-cache ."
+          sh "docker tag $DOCKER_NAME_OPENDKIM:${env.BUILD_NUMBER} $DOCKER_NAME_OPENDKIM:latest"
+        }
+        dir("postgrey") {
+          sh "docker build -t $DOCKER_NAME_POSTGREY:${env.BUILD_NUMBER} --no-cache ."
+          sh "docker tag $DOCKER_NAME_POSTGREY:${env.BUILD_NUMBER} $DOCKER_NAME_POSTGREY:latest"
+        }
+        dir("postfix") {
+          sh "docker build -t $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} --no-cache ."
+          sh "docker tag $DOCKER_NAME_POSTFIX:${env.BUILD_NUMBER} $DOCKER_NAME_POSTFIX:latest"
+        }
       }
     }
     stage('Docker Push') {
