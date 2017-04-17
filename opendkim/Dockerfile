@@ -1,17 +1,20 @@
-FROM ubuntu:15.10
+FROM ubuntu:latest
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN locale-gen en_GB en_GB.UTF-8 && dpkg-reconfigure locales
 
 # Prerequisites
-RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d && \
-    apt-get update && apt-get install -y \
-    opendkim \
-    opendkim-tools \
-    openssl \
-    rsyslog && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get update \
+    && apt-get install -y \
+       locales \
+       netcat \
+       opendkim \
+       opendkim-tools \
+       openssl \
+       rsyslog \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN locale-gen en_US en_US.UTF-8 && dpkg-reconfigure locales
 
 COPY ./config/rsyslog.conf /etc/rsyslog.conf
 COPY ./config/opendkim /etc/opendkim
@@ -30,3 +33,4 @@ ENV OPEN_DKIM=true
 
 EXPOSE 8891
 CMD /boot.sh; opendkim -p inet:8891@0.0.0.0; rsyslogd -n
+HEALTHCHECK CMD nc -z localhost 8891
