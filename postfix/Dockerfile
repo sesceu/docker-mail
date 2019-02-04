@@ -1,6 +1,8 @@
 FROM ubuntu:latest
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV AMAVIS 1
+ENV OPEN_DKIM 1
 
 # Prerequisites
 RUN apt-get update && apt-get install -y --no-install-recommends \
