@@ -47,4 +47,4 @@ RUN useradd -g vmail -u 5000 vmail -d /vmail -m
 
 EXPOSE 25 143 587 993
 CMD /boot.sh; service postfix start; service dovecot start; rsyslogd -n
-HEALTHCHECK CMD nc -z localhost 25 && nc -z localhost 143 && nc -z localhost 587 && nc -z localhost 993 && nc -z localhost 4190 || exit 1
+HEALTHCHECK CMD nc -z localhost 25 && nc -z localhost 143 && nc -z localhost 587 && nc -z localhost 993 && nc -z localhost 4190 && echo "" | openssl s_client -starttls smtp -connect localhost:25 | openssl x509 -noout -checkend 86400 || exit 1
