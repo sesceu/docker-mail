@@ -29,13 +29,14 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 myhostname = localhost
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
-mydestination =
+mydestination = /etc/mailname, localhost.localdomain, localhost
 relayhost =
-mynetworks = 127.0.0.0/8 172.0.0.0/8 10.0.0.0/8
+mynetworks = 127.0.0.0/8 172.0.0.0/8
 mailbox_size_limit = 0
 message_size_limit = 0
 virtual_mailbox_limit = 0
 recipient_delimiter = +
+recipient_canonical_maps = regexp:/etc/postfix/recipient_canonical_maps
 
 # SMTP configuration for incoming mail (port 25)
 # Outgoing mail (port 587) configuration  is specified in master.cf
