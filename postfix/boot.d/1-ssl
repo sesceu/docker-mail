@@ -1,6 +1,14 @@
 #!/bin/bash
 echo "Running `basename "$0"`"
 
+SSL_CERT_FILE=/etc/ssl/certs/ssl-cert-snakeoil.pem
+SSL_KEY_FILE=/etc/ssl/private/ssl-cert-snakeoil.key
+
+if [ -f $SSL_CERT_FILE ]; then
+	echo "was enddate: "
+	openssl x509 -enddate -noout -in $SSL_CERT_FILE
+fi
+
 # Copy cert_file if present in config
 if jq -e '.settings.ssl_cert_file?' "$CONFIG_FILE" > /dev/null; then
 	CERT_FILE=$(jq -r '.settings.ssl_cert_file' "$CONFIG_FILE")
@@ -20,3 +28,9 @@ elif [ -f /mail_settings/ssl-cert-snakeoil.key ]; then
 else
 	cp /etc/ssl/private/ssl-cert-snakeoil.key /mail_settings/ssl-cert-snakeoil.key
 fi
+
+if [ -f $SSL_CERT_FILE ]; then
+	echo "is enddate: "
+	openssl x509 -enddate -noout -in $SSL_CERT_FILE
+fi
+
